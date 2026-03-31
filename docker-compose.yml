@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: node_app_image_hw_2
+    container_name: node_app_hw_2
+    volumes:
+      - ./backend:/app
+      - node_app_hw_2-modules:/app/node_modules
+    ports:
+      - "3030:3030"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: react_app_image_hw_2
+    container_name: react_app_hw_2
+    volumes:
+      - ./frontend:/app
+      - react_app_hw_2-modules:/app/node_modules
+    ports:
+      - "5173:5173"
+
+volumes:
+  node_app_hw_2-modules:
+  react_app_hw_2-modules:
