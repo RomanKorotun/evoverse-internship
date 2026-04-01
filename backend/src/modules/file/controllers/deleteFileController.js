@@ -1,15 +1,12 @@
-import fs from "fs/promises";
-import path from "path";
-import { sendErrorResponse } from "../helpers/index.js";
-import { UPLOAD_DIR } from "../constants/index.js";
+import { sendErrorResponse } from "../../../helpers/index.js";
+import { deleteFileService } from "../services/index.js";
 
 const deleteFileController = async (req, res) => {
   const encodedName = req.url.split("/")[2];
   const filename = decodeURIComponent(encodedName);
 
-  const filePath = path.resolve(UPLOAD_DIR, filename);
   try {
-    await fs.unlink(filePath);
+    await deleteFileService(filename);
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ message: `Файл ${filename} успішно видалений` }));

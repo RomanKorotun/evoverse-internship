@@ -1,29 +1,3 @@
-/* .files-btn {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 13px;
-  color: white;
-}
-
-.files-btn.view {
-  background-color: #007bff;
-}
-
-.files-btn.view:hover {
-  background-color: #0056b3;
-}
-
-.files-btn.delete {
-  background-color: #dc3545;
-}
-
-.files-btn.delete:hover {
-  background-color: #a71d2a;
-} */
-
 .files-btn {
   padding: 6px 12px;
   border: none;

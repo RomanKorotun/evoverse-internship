@@ -1,20 +1,14 @@
-import path from "path";
-import fsPromises from "fs/promises";
-import fs from "fs";
-import mime from "mime-types";
 import { pipeline } from "stream/promises";
-import { sendErrorResponse } from "../helpers/index.js";
-import { UPLOAD_DIR } from "../constants/index.js";
+
+import { sendErrorResponse } from "../../../helpers/index.js";
+import { downloadFileService } from "../services/index.js";
 
 const downloadFileController = async (req, res) => {
   const encodedName = req.url.split("/")[3];
   const filename = decodeURIComponent(encodedName);
-  const filePath = path.resolve(UPLOAD_DIR, filename);
 
   try {
-    const info = await fsPromises.stat(filePath);
-    const mimeType = mime.lookup(filePath) || "application/octet-stream";
-    const readStream = fs.createReadStream(filePath);
+    const { readStream, info, mimeType } = await downloadFileService(filename);
 
     readStream.on("data", (chunk) => {
       console.log(`Відправлено файл: ${chunk.length} байт`);

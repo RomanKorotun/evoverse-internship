@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+
 import "./UploadPage.css";
 import { BACKEND_URL } from "../../config";
 
@@ -29,11 +30,6 @@ const UploadPage = () => {
     }
   };
 
-  const handleFileChange = () => {
-    setStatus(null);
-    setStatusType(null);
-  };
-
   return (
     <div className="upload-page">
       <form className="upload-form" onSubmit={handleSubmit}>
@@ -45,7 +41,10 @@ const UploadPage = () => {
           id="fileInput"
           name="fileInput"
           className="upload-input"
-          onChange={handleFileChange}
+          onClick={() => {
+            setStatus(null);
+            setStatusType(null);
+          }}
         />
         <button type="submit" className="upload-button">
           Завантажити

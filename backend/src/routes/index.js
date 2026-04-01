@@ -1,6 +1,12 @@
-export { default as uploadRoute } from "./uploadRoute.js";
-export { default as deleteFileRoute } from "./deleteFileRoute.js";
-export { default as statusRoute } from "./statusRoute.js";
-export { default as viewFileRoute } from "./viewFileRoute.js";
-export { default as listFilesRoute } from "./listFilesRoute.js";
-export { default as downloadFileRoute } from "./downloadFileRoute.js";
+import { sendErrorResponse } from "../helpers/index.js";
+import filesRoutes from "../modules/file/file.routes.js";
+
+const routes = async (req, res) => {
+  if (req.url.startsWith("/files")) {
+    await filesRoutes(req, res);
+  } else {
+    sendErrorResponse(res, 404, "Not Found");
+  }
+};
+
+export default routes;

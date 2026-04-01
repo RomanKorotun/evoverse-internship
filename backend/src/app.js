@@ -1,6 +1,7 @@
 import http from "http";
-import routes from "./routes/routes.js";
-import cors from "./middlewares/cors.js";
+
+import routes from "./routes/index.js";
+import { cors } from "./middlewares/index.js";
 
 const app = http.createServer(async (req, res) => {
   cors(req, res);
