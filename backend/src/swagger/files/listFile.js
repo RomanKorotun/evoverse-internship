@@ -27,7 +27,7 @@
  *                       createdAt:
  *                         type: string
  *                         format: date-time
- *                         example: "2026-03-29T10:05:27.565Z"
+ *                         example: 2026-03-29T10:05:27.565Z
  *       500:
  *         description: Внутрішня помилка сервера
  *         content:
@@ -37,5 +37,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Помилка при отриманні списку файлів"
+ *                   example: Server error
  */

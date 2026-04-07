@@ -1,0 +1,33 @@
+.storage-stats {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.stat-item {
+  flex: 1 1 200px;
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 13px;
+  color: #555;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 4px;
+}

@@ -22,7 +22,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Файл 1775459709419-example.txt успішно видалений"
+ *                   example: Файл 1775459709419-example.txt успішно видалений
  *       400:
  *         description: Некоректне ім’я файлу (не відповідає регулярному виразу)
  *         content:
@@ -32,7 +32,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Некоректне ім’я файлу"
+ *                   example: Некоректне ім’я файлу
  *       404:
  *         description: Файл не знайдено
  *         content:
@@ -42,7 +42,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Файл 1775459709419-example.txt не знайдено"
+ *                   example: Файл 1775459709419-example.txt не знайдено
  *       500:
  *         description: Внутрішня помилка сервера
  *         content:
@@ -52,5 +52,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Помилка при видаленні файлу"
+ *                   example: Server error
  */

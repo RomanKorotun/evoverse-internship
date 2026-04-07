@@ -12,7 +12,7 @@ const deleteFileController = async (req, res) => {
     if (error.code === "ENOENT") {
       throw HttpError(404, `Файл ${filename} не знайдено`);
     }
-    throw HttpError(500, "Помилка при видаленні файлу");
+    throw error;
   }
 };
 

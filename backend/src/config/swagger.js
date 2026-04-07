@@ -1,6 +1,8 @@
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
+const PORT_EXTERNAL = process.env.PORT_EXTERNAL;
+
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -10,13 +12,13 @@ const options = {
       description: "API для роботи з файлами ",
       contact: {
         name: "File Storage API Maintainers",
-        url: "https://github.com/RomanKorotun/evoverse-internship/tree/hw-2",
+        url: "https://github.com/RomanKorotun/evoverse-internship/tree/hw-3",
         email: "roman.korotun@ukr.net",
       },
     },
     servers: [
       {
-        url: "http://localhost:3030",
+        url: `http://127.0.0.1:${PORT_EXTERNAL}`,
         description: "Локальний сервер",
       },
     ],

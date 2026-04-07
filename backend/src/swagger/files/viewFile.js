@@ -6,8 +6,9 @@
  *     summary: Переглянути файл
  *     description: |
  *       Повертає файл для перегляду у браузері.
- *       Використовує підтримку Range для потокового відтворення.
- *       ⚠️ Не натискати "Try it out" у Swagger UI для цього ендпойнта.
+ *       Підтримує Range-запити для потокового відтворення.
+ *       Тут можна переглянути різні статуси відповіді.
+ *       ⚠️ Не натискати "Try it out" у Swagger UI для цього ендпойнта. Потрібно робити запит у браузері і переглядати необхідну інформацію в інструментах розробника.
  *     parameters:
  *       - in: path
  *         name: filename
@@ -17,24 +18,16 @@
  *         description: Ім’я файлу для перегляду
  *     responses:
  *       200:
- *         description: Файл успішно відправлено
+ *         description: Файл повністю відправлено
  *         content:
- *           video/mp4:
- *             schema:
- *               type: string
- *               format: binary
- *           audio/mpeg:
+ *           application/octet-stream:
  *             schema:
  *               type: string
  *               format: binary
  *       206:
  *         description: Частковий контент (для стрімінгу)
  *         content:
- *           video/mp4:
- *             schema:
- *               type: string
- *               format: binary
- *           audio/mpeg:
+ *           application/octet-stream:
  *             schema:
  *               type: string
  *               format: binary
@@ -67,6 +60,6 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Помилка при перегляді файла
+ *                   example: Server error
  *     x-no-try: true
  */

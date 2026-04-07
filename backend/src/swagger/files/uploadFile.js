@@ -25,7 +25,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Файл example.txt успішно завантажено"
+ *                   example: Файл example.txt успішно завантажено
  *       413:
  *         description: Перевищено квоту або ліміт розміру
  *         content:
@@ -35,7 +35,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Перевищено квоту сховища"
+ *                   example: Перевищено квоту сховища
  *       500:
  *         description: Внутрішня помилка сервера
  *         content:
@@ -45,5 +45,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Помилка при завантаженні файла"
+ *                   example: "Server error"
  */

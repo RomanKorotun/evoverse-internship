@@ -10,8 +10,6 @@ const storageStatsService = async () => {
   const files = await getFilesList(UPLOAD_DIR);
   let quotaBytes = await getQuota();
 
-  quotaBytes = isNaN(quotaBytes) ? quotaBytes : Number(quotaBytes);
-
   return { totalSizeBytes, quotaBytes, filesCount: files.length };
 };
 

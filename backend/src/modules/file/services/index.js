@@ -1,5 +1,7 @@
 export { default as uploadFileService } from "./uploadFileService.js";
 export { default as setQuotaService } from "./setQuotaService.js";
+export { default as getQuotaService } from "./getQuotaService.js";
+export { default as updateQuotaService } from "./updateQuotaService.js";
 export { default as deleteFileService } from "./deleteFileService.js";
 export { default as listFilesService } from "./listFilesService.js";
 export { default as storageStatsService } from "./storageStatsService.js";

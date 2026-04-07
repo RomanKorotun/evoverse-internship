@@ -8,8 +8,11 @@ services:
     volumes:
       - ./backend:/app
       - node_app_hw_3-modules:/app/node_modules
+    environment:
+      - PORT_EXTERNAL=${BACKEND_PORT_EXTERNAL}
+      - PORT_INTERNAL=${BACKEND_PORT_INTERNAL}
     ports:
-      - "3030:3030"
+      - "${BACKEND_PORT_EXTERNAL}:${BACKEND_PORT_INTERNAL}"
     depends_on:
       redis:
         condition: service_healthy
@@ -33,6 +36,8 @@ services:
       dockerfile: Dockerfile
     image: react_app_image_hw_3
     container_name: react_app_hw_3
+    environment:
+      - VITE_BACKEND_PORT_EXTERNAL=${BACKEND_PORT_EXTERNAL}
     volumes:
       - ./frontend:/app
       - react_app_hw_3-modules:/app/node_modules

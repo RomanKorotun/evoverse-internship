@@ -1,11 +1,14 @@
 import express from "express";
-import { swaggerUi, swaggerSpec } from "./config/swagger.js";
 import cors from "cors";
+import helmet from "helmet";
 
+import { swaggerUi, swaggerSpec } from "./config/swagger.js";
 import fileRouter from "./modules/file/fileRouter.js";
 import { notFound, errorHandler } from "./middlewares/index.js";
 
 const app = express();
+
+app.use(helmet());
 
 app.use(cors());
 

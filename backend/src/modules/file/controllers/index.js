@@ -1,5 +1,7 @@
 export { default as uploadFileControlle } from "./uploadFileController.js";
 export { default as setQuotaController } from "./setQuotaController.js";
+export { default as getQuotaController } from "./getQuotaController.js";
+export { default as updateQuotaController } from "./updateQuotaController.js";
 export { default as deleteFileController } from "./deleteFileController.js";
 export { default as listFilesController } from "./listFilesController.js";
 export { default as storageStatsController } from "./storageStatsController.js";

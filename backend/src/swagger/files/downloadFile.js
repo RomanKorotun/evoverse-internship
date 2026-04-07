@@ -49,5 +49,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Помилка при завантаженні файла
+ *                   example: Server error
  */

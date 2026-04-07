@@ -35,7 +35,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Відсутнє тіло запиту або некоректні значення полів"
+ *                   example: Відсутнє тіло запиту або некоректні значення полів
 
  *       500:
  *         description: Внутрішня помилка сервера
@@ -46,5 +46,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Server Error"
+ *                   example: Server error
  */

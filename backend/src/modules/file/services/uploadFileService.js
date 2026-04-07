@@ -45,11 +45,7 @@ const uploadFileService = async (file, info) => {
   } catch (error) {
     await fsPromises.unlink(saveTo);
 
-    if (error.status) {
-      throw error;
-    }
-
-    throw HttpError(500, "Помилка при завантаженні файла");
+    throw error;
   }
 };
 

@@ -35,5 +35,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */

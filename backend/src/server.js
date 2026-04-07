@@ -1,11 +1,10 @@
 import redis from "./config/redisClient.js";
-
 import app from "./app.js";
 
-const PORT = 3030;
+const PORT_INTERNAL = process.env.PORT_INTERNAL || 3000;
 
-const server = app.listen(PORT, () =>
-  console.log(`Server is running on port ${PORT}`),
+const server = app.listen(PORT_INTERNAL, () =>
+  console.log(`Server is running on ${PORT_INTERNAL} PORT`),
 );
 
 const shutdown = async (signal) => {

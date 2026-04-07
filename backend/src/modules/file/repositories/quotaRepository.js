@@ -6,5 +6,6 @@ export const setQuota = async (quota) => {
 };
 
 export const getQuota = async () => {
-  return await redis.get("quota");
+  const quota = await redis.get("quota");
+  return isNaN(quota) ? quota : Number(quota);
 };
