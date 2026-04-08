@@ -5,7 +5,7 @@ import { getFileStream } from "../services/index.js";
 const viewFileController = async (req, res) => {
   try {
     const { filename } = req.params;
-    console.log("filename", filename);
+
     const range = req.headers.range;
 
     const { readStream, headers, statusCode } = await getFileStream(
