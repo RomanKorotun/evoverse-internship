@@ -18,7 +18,7 @@ const options = {
     },
     servers: [
       {
-        url: `http://127.0.0.1:${PORT_EXTERNAL}`,
+        url: `http://localhost:${PORT_EXTERNAL}`,
         description: "Локальний сервер",
       },
     ],
