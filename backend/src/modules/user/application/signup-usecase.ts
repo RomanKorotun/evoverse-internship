@@ -3,7 +3,6 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { UsersRepository } from '../infrastructure/repositories/users.repository';
 import { SignupDto } from '../presentation/dto/signup.dto';
 
-
 @Injectable()
 export class SignupUseCase {
   constructor(private readonly userRepository: UsersRepository) {}

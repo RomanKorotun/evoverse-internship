@@ -88,7 +88,11 @@ export class FileStorage implements OnModuleInit {
     );
   }
 
-  async getFileStream(filename: string, range?: string) {
+  async getFileStream(
+    filename: string,
+    range?: string,
+    mode: 'inline' | 'attachment' = 'inline',
+  ) {
     const filePath = path.join(STORAGE_DIR, filename);
 
     const stat = await fsPromises.stat(filePath);
@@ -103,7 +107,6 @@ export class FileStorage implements OnModuleInit {
 
     if (isRangeRequest) {
       const parts = range.replace(/bytes=/, '').split('-');
-
       start = Number(parts[0]);
       end = parts[1] ? Number(parts[1]) : fileSize - 1;
     }
@@ -118,16 +121,12 @@ export class FileStorage implements OnModuleInit {
       headers: {
         'Content-Type': mimeType,
         'Content-Length': chunkSize,
+        'Content-Disposition': `${mode}; filename="${filename}"`,
 
         ...(isRangeRequest && {
           'Content-Range': `bytes ${start}-${end}/${fileSize}`,
           'Accept-Ranges': 'bytes',
         }),
-      },
-      meta: {
-        size: fileSize,
-        filename,
-        mimeType,
       },
     };
   }

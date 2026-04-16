@@ -2,12 +2,17 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   Post,
   Req,
+  Res,
   StreamableFile,
   UseGuards,
 } from '@nestjs/common';
+
+import type { Response } from 'express';
+import { pipeline } from 'stream/promises';
 
 import { CreateFileUseCase } from '../application/create-file-usecase';
 import { FindAllFilesUseCase } from '../application/find-all-files-usecase';
@@ -53,18 +58,21 @@ export class FileController {
 
   // перегляд конкретного файла
   @Get(':id/:userId/view')
-  async viewFile(@Param('id') id: string, @Param('userId') userId: string, @Req() req: AuthRequest) {
-    const range = req.headers.range as string | undefined;
+  async view(
+    @Param('id') fileId: string,
+    @Param('userId') userId: string,
+    @Headers('range') range: string,
+    @Res() res: Response,
+  ) {
+    const result = await this.viewFileUseCase.execute(fileId, userId, range);
 
-    const file = await this.viewFileUseCase.execute(id, userId, range);
+    res.set(result.headers);
+    res.status(result.statusCode);
 
-    return new StreamableFile(file.stream, {
-      type: file.mimeType,
-      disposition: `inline; filename*=UTF-8''${encodeURIComponent(file.filename)}`,
-    });
+    await pipeline(result.stream, res);
   }
 
-  // завантажити файл поточного користувача
+  // скачати файл поточного користувача
   @UseGuards(AuthGuard)
   @Get(':id/download')
   async downloadFile(@Param('id') id: string, @Req() req: AuthRequest) {

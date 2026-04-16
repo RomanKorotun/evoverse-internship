@@ -1,8 +1,11 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 
 import { UsersRepository } from '../infrastructure/repositories/users.repository';
 import { FilesRepository } from '../../file/infrastructure/repositories/files.repository';
-
 
 @Injectable()
 export class UpdateUserQuotaUseCase {
@@ -22,7 +25,7 @@ export class UpdateUserQuotaUseCase {
 
     if (quota < usedBytes) {
       throw new BadRequestException(
-        "Ліміт сховища не може бути меншим за обсяг існуючих файлів",
+        'Ліміт сховища не може бути меншим за обсяг існуючих файлів',
       );
     }
 

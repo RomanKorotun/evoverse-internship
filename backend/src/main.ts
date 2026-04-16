@@ -19,6 +19,8 @@ async function bootstrap() {
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );
 
-  await app.listen(PORT_INTERNAL, () => logger.log(`Server is running on ${PORT_INTERNAL} PORT`));
+  await app.listen(PORT_INTERNAL, () =>
+    logger.log(`Server is running on ${PORT_INTERNAL} PORT`),
+  );
 }
 bootstrap();
