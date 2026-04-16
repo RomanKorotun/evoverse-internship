@@ -4,5 +4,5 @@ dist/
 .idea/
 .vscode/
 db/
-storage/
+file-storage/
 Dockerfile
