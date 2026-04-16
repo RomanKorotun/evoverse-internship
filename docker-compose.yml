@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: node_app_image_hw_4
+    container_name: node_app_hw_4
+    volumes:
+      - ./backend:/app
+      - node_app_hw_4-modules:/app/node_modules
+    environment:
+      - PORT_EXTERNAL=${BACKEND_PORT_EXTERNAL}
+      - PORT_INTERNAL=${BACKEND_PORT_INTERNAL}
+    ports:
+      - "${BACKEND_PORT_EXTERNAL}:${BACKEND_PORT_INTERNAL}"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: react_app_image_hw_4
+    container_name: react_app_hw_4
+    volumes:
+      - ./frontend:/app
+      - react_app_hw_4-modules:/app/node_modules
+    environment:
+      - VITE_BACKEND_PORT_EXTERNAL=${BACKEND_PORT_EXTERNAL}
+    ports:
+      - "5173:5173"
+
+volumes:
+  node_app_hw_4-modules:
+  react_app_hw_4-modules:
