@@ -9,7 +9,7 @@ import mime from 'mime-types';
 import { randomUUID } from 'crypto';
 
 import { LimitStream } from '../streams/limit.stream';
-import { STORAGE_DIR } from '../../../../constants/store.constants';
+import { STORAGE_DIR } from '../../../../common/constants/store.constants';
 
 @Injectable()
 export class FileStorage implements OnModuleInit {

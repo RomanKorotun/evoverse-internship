@@ -1,5 +1,5 @@
 import sanitizeFilename from 'sanitize-filename';
-import { FILENAME_REGEX } from '../../../constants/regex.constants';
+import { FILENAME_REGEX } from '../../../common/constants/regex.constants';
 
 const normalizeFilename = (rawName: string) => {
   let originalName = rawName;

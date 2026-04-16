@@ -6,9 +6,9 @@ import {
   FILES_DIR,
   FILES_FILENAME,
   FILES_PATH,
-} from '../../../../constants/db.constants';
+} from '../../../../common/constants/db.constants';
 import { FileEntity } from '../../domain/entities/file.entity';
-import { readJsonFile } from '../../../../helpers/index';
+import { readJsonFile } from '../../../../common/helpers/index';
 import { CreateFileInput } from '../../domain/inputs/create-file.input';
 
 @Injectable()

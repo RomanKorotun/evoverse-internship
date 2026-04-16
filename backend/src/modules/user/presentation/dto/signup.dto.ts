@@ -1,6 +1,6 @@
 import { IsEmail, IsInt, IsNotEmpty, Matches, Min } from 'class-validator';
 
-import { PASSWORD_REGEX } from '../../../../constants/regex.constants';
+import { PASSWORD_REGEX } from '../../../../common/constants/regex.constants';
 
 export class SignupDto {
   @IsNotEmpty({ message: 'Поле email не може бути пустим' })

@@ -6,9 +6,9 @@ import {
   USERS_DIR,
   USERS_FILENAME,
   USERS_PATH,
-} from '../../../../constants/db.constants';
+} from '../../../../common/constants/db.constants';
 import { UserEntity } from '../../domain/entities/user.entity';
-import { readJsonFile } from '../../../../helpers/index';
+import { readJsonFile } from '../../../../common/helpers/index';
 import { SignupDto } from '../../presentation/dto/signup.dto';
 
 @Injectable()

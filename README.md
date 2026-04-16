@@ -1,5 +1,4 @@
 Dev Containers: Attach to Running Container...
-TypeScript: Restart TS Server
 
 # Evoverse Internship homework-4
 
@@ -38,6 +37,15 @@ TypeScript: Restart TS Server
 ### Інфраструктура
 
 - Docker (Dockerfile, Docker Compose)
+
+### Dev Containers
+
+- Використовується підтримка **Dev Containers** у VS Code.
+- Для роботи потрібно встановити офіційне розширення **Dev Containers**.
+- Це дозволяє підключатися безпосередньо до працюючого контейнера та розробляти всередині нього.
+- У VS Code відкрийте командну палітру (**Ctrl+Shift+P**) і виберіть:
+  `Dev Containers: Attach to Running Container...`
+- Після цього відкриється середовище розробки всередині контейнера, з доступом до всіх залежностей та інструментів.
 
 ## 2. Загальні положення
 

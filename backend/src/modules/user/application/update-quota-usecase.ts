@@ -22,7 +22,7 @@ export class UpdateUserQuotaUseCase {
 
     if (quota < usedBytes) {
       throw new BadRequestException(
-        "Квота не може бути менша за обсяг існуючих файлів",
+        "Ліміт сховища не може бути меншим за обсяг існуючих файлів",
       );
     }
 
