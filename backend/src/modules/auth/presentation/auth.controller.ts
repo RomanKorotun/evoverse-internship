@@ -73,7 +73,10 @@ export class AuthController {
   @Get('sessions')
   async getSessions(@Req() req: AuthRequest) {
     const sessions = await this.findUserSessionsUseCase.execute(req.user.id);
-    return sessions.map((session) => this.sessionMapper.toResponse(session));
+    return sessions.map((session) => ({
+      ...this.sessionMapper.toResponse(session),
+      isCurrent: session.id === req.user.sessionId,
+    }));
   }
 
   // Видалення однієї конкретної сесії користувача
@@ -97,7 +100,7 @@ export class AuthController {
     this.authCookieService.clearAuthCookie(res);
     return result;
   }
-  
+
   // Вихід із системи: видаляє сесію користувача та очищає куку з токеном
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)

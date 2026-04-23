@@ -7,21 +7,18 @@
   flex-direction: column;
 }
 
-/* top bar */
 .top-bar {
   display: flex;
   justify-content: flex-start;
   margin-bottom: 12px;
 }
 
-/* title */
 .page-title {
   font-size: 26px;
   margin-bottom: 16px;
   text-align: left;
 }
 
-/* table wrapper */
 .table-card {
   background: #fff;
   border-radius: 10px;
@@ -29,7 +26,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* table */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -55,7 +51,16 @@ tr:hover {
   background: #f9fafb;
 }
 
-/* back button */
+.current-session {
+  background: #ecfdf5;
+}
+
+.current-badge {
+  color: #10b981;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
 .back-btn {
   font-size: 12px;
   background: #111827;
@@ -66,7 +71,6 @@ tr:hover {
   cursor: pointer;
 }
 
-/* danger button */
 .btn-danger {
   background: #ef4444;
   color: white;
@@ -76,29 +80,23 @@ tr:hover {
   cursor: pointer;
 }
 
-/* footer row inside table */
 .table-footer-row td {
   border-top: 1px solid #eee;
   padding-top: 14px;
 }
 
-/* align button to right column */
 .table-footer-row td:last-child {
-  text-align: right;
+  text-align: center;
 }
 
-/* clear all button */
 .btn-clear-all {
   background: #111827;
   color: white;
-
   border: none;
   padding: 8px 12px;
   border-radius: 8px;
-
   font-size: 13px;
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 

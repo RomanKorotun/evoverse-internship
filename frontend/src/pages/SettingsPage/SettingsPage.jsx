@@ -7,7 +7,8 @@ import "./SettingsPage.css";
 const SettingsPage = () => {
   const navigate = useNavigate();
 
-  const { fetchSessions, revokeSession, clearAllSessions } = authStore();
+  const { fetchSessions, revokeSession, clearAllSessions, logoutUser } =
+    authStore();
   const sessions = authStore((s) => s.sessions);
   const user = authStore((s) => s.user);
 
@@ -15,9 +16,14 @@ const SettingsPage = () => {
     fetchSessions();
   }, [fetchSessions]);
 
-  const handleRevoke = async (sessionId) => {
+  const handleRevoke = async (sessionId, isCurrent) => {
     try {
-      await revokeSession(sessionId);
+      if (isCurrent) {
+        await logoutUser();
+        navigate("/signin");
+      } else {
+        await revokeSession(sessionId);
+      }
     } catch (err) {
       console.error("Failed to revoke session:", err);
     }
@@ -63,9 +69,12 @@ const SettingsPage = () => {
 
           <tbody>
             {sessions.map((s) => (
-              <tr key={s.id}>
+              <tr key={s.id} className={s.isCurrent ? "current-session" : ""}>
                 <td>
                   {s.device.browser} • {s.device.os} • {s.device.type}
+                  {s.isCurrent && (
+                    <span className="current-badge"> (Current)</span>
+                  )}
                 </td>
 
                 <td>{s.ip}</td>
@@ -76,7 +85,7 @@ const SettingsPage = () => {
                   <div className="action-cell">
                     <button
                       className="btn-danger"
-                      onClick={() => handleRevoke(s.id)}
+                      onClick={() => handleRevoke(s.id, s.isCurrent)}
                     >
                       End session
                     </button>
@@ -85,8 +94,7 @@ const SettingsPage = () => {
               </tr>
             ))}
 
-            {/* 🔥 ROW FOR CLEAR ALL */}
-            <tr>
+            <tr className="table-footer-row">
               <td colSpan="3"></td>
               <td>
                 <div className="action-cell">
