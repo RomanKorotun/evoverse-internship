@@ -27,7 +27,7 @@ const UserInfo = () => {
 
   return (
     <div>
-      <h2 className="files-title">Користувач</h2>
+      <h2 className="files-title"> {user?.role || "Користувач"}</h2>
 
       <div className="user-card">
         <span className="user-value">{user?.email || "—"}</span>
