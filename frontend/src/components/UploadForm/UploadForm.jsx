@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { filesStore } from "../../store/filesStore";
 
 import "./UploadForm.css";
@@ -9,8 +10,6 @@ const UploadForm = () => {
 
   const { handleFileUpload } = filesStore();
 
-  const savedUser = JSON.parse(localStorage.getItem("authUser"));
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const file = e.target.fileInput.files[0];
@@ -20,10 +19,7 @@ const UploadForm = () => {
     formData.append("file", file);
 
     try {
-      await handleFileUpload(formData, {
-        email: savedUser.email,
-        password: savedUser.password,
-      });
+      await handleFileUpload(formData);
 
       setStatus("Файл завантажено ✅");
       setStatusType("success");

@@ -1,7 +1,13 @@
-import type { Request } from 'express';
+import { Request } from 'express';
 
-import { UserEntity } from '../../modules/user/domain/entities/user.entity';
+import { UserRole } from '../../modules/user/domain/enums/user-role.enum';
+
+interface AuthUser {
+  id: string;
+  role: UserRole;
+  sessionId: string;
+}
 
 export interface AuthRequest extends Request {
-  user: UserEntity;
+  user: AuthUser;
 }

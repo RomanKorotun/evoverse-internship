@@ -1,14 +1,12 @@
-.user-info {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .user-card {
   background: #f9f9f9;
   padding: 15px;
-  border-radius: 6px;
-  border: 1px solid #eee;
+  border-radius: 8px;
+  border: 1px solid #eaeaea;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .user-value {
@@ -16,4 +14,47 @@
   font-weight: 600;
   color: #222;
   word-break: break-all;
+}
+
+.user-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-top: 10px;
+  border-top: 1px solid #e6e6e6;
+}
+
+/* 🔵 settings */
+.settings-btn {
+  background: transparent;
+  border: none;
+  color: #1677ff;
+  font-size: 14px;
+  cursor: pointer;
+
+  padding: 0;
+  transition: 0.2s ease;
+}
+
+.settings-btn:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 🔴 logout */
+.logout-btn {
+  background: transparent;
+  border: none;
+  color: #ff4d4f;
+  font-size: 14px;
+  cursor: pointer;
+
+  padding: 0;
+  transition: 0.2s ease;
+}
+
+.logout-btn:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }

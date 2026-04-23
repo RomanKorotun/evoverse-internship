@@ -1,26 +1,38 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
-import { SignupUseCase } from './application/signup-usecase';
-import { FindAllUseCase } from './application/find-all-users-usecase';
-import { FindByIdUseCase } from './application/find-by-id-usecase';
-import { UsersRepository } from './infrastructure/repositories/users.repository';
-import { UpdateUserQuotaUseCase } from './application/update-quota-usecase';
-import { AuthModule } from '../auth/auth.module';
-import { FileModule } from '../file/file.module';
+import { CreateUserUseCase } from './application/create-user/create-user.usecase';
+import { UsersJsonRepository } from './infrastructure/repositories/users.repository';
+import { UpdateUserQuotaUseCase } from './application/update-user-quota/update-user-quota-usecase';
 import { UserController } from './presentation/user.controller';
-import { UsersService } from './application/users.service';
+import { SecurityModule } from '../../common/security/security.module';
+import { FindUserByEmailUseCase } from './application/find-user-by-email/find-user-by-email.usecase';
+import { FindUserByIdUseCase } from './application/find-user-by-id/find-user-by-id.usecase';
+import { FindAllUsersUseCase } from './application/find-all-users/find-all-users.usecase';
+import { UpdateUserStatus } from './application/update-user-status/update-user-status.usecase';
+import { UserMapper } from './presentation/mappers/user.mapper';
 
 @Module({
-  imports: [forwardRef(() => AuthModule), FileModule],
+  imports: [SecurityModule],
   controllers: [UserController],
   providers: [
-    SignupUseCase,
-    FindAllUseCase,
-    FindByIdUseCase,
+    CreateUserUseCase,
+    FindUserByEmailUseCase,
+    FindUserByIdUseCase,
+    FindAllUsersUseCase,
     UpdateUserQuotaUseCase,
-    UsersRepository,
-    UsersService,
+    UpdateUserStatus,
+    UpdateUserQuotaUseCase,
+    UserMapper,
+    { provide: 'IUsersRepository', useClass: UsersJsonRepository },
   ],
-  exports: [UsersRepository, UsersService],
+  exports: [
+    CreateUserUseCase,
+    FindUserByEmailUseCase,
+    FindUserByIdUseCase,
+    FindAllUsersUseCase,
+    UpdateUserStatus,
+    UpdateUserQuotaUseCase,
+    UserMapper,
+  ],
 })
 export class UserModule {}

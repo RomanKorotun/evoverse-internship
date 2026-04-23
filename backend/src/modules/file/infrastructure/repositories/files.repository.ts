@@ -9,10 +9,13 @@ import {
 } from '../../../../common/constants/db.constants';
 import { FileEntity } from '../../domain/entities/file.entity';
 import { readJsonFile } from '../../../../common/helpers/index';
-import { CreateFileInput } from '../../domain/inputs/create-file.input';
+import {
+  CreateFileInput,
+  IFilesRepository,
+} from '../../../file/domain/repositories/files.repository';
 
 @Injectable()
-export class FilesRepository implements OnModuleInit {
+export class FilesRepository implements IFilesRepository, OnModuleInit {
   private readonly logger = new Logger(FilesRepository.name);
 
   async onModuleInit() {
@@ -23,17 +26,43 @@ export class FilesRepository implements OnModuleInit {
     return readJsonFile<FileEntity>(FILES_PATH, FILES_FILENAME, this.logger);
   }
 
+  async saveFileMetadata(input: CreateFileInput): Promise<FileEntity> {
+    const files = await this.load();
+    const entity: FileEntity = {
+      id: randomUUID(),
+      ...input,
+      createdAt: new Date().toISOString(),
+    };
+    files.push(entity);
+    await fs.writeFile(FILES_PATH, JSON.stringify(files, null, 2));
+    this.logger.log(`[FILES][REPOSITORY] FILE_CREATED id=${entity.id}`);
+    return entity;
+  }
+
+  // отримати всі файли поточного користувача
+  async findAllByUserId(userId: string): Promise<FileEntity[]> {
+    const files = await this.load();
+    return files.filter((file) => file.userId === userId);
+  }
+
+  // Обчислює кількість використаного місця у сховищі (в байтах) для конкретного користувача
   async getUserUsedSize(userId: string): Promise<number> {
     const files = await this.load();
-
     return files
       .filter((f) => f.userId === userId)
       .reduce((sum, f) => sum + f.size, 0);
   }
 
+  // видалення файла користувача по айді
+  async removeById(fileId: string): Promise<void> {
+    const files = await this.load();
+    const updated = files.filter((file) => file.id !== fileId);
+    await fs.writeFile(FILES_PATH, JSON.stringify(updated, null, 2));
+  }
+
+  // повертає статистику файлового сховища користувача: загальний розмір використаних байтів та кількість файлів
   async getUserStorageStats(userId: string) {
     const files = await this.load();
-
     return files.reduce(
       (acc, file) => {
         if (file.userId === userId) {
@@ -47,35 +76,9 @@ export class FilesRepository implements OnModuleInit {
     );
   }
 
-  async create(input: CreateFileInput): Promise<FileEntity> {
-    const files = await this.load();
-
-    const entity: FileEntity = {
-      id: randomUUID(),
-      ...input,
-      createdAt: new Date().toISOString(),
-    };
-
-    files.push(entity);
-    await fs.writeFile(FILES_PATH, JSON.stringify(files, null, 2));
-    this.logger.log(`[FILES][REPOSITORY] FILE_CREATED id=${entity.id}`);
-    return entity;
-  }
-
-  async findAllByUserId(userId: string): Promise<FileEntity[]> {
-    const files = await this.load();
-    return files.filter((file) => file.userId === userId);
-  }
-
   async findById(fileId: string): Promise<FileEntity | null> {
     const files = await this.load();
     return files.find((file) => file.id === fileId) ?? null;
-  }
-
-  async removeById(fileId: string): Promise<void> {
-    const files = await this.load();
-    const updated = files.filter((file) => file.id !== fileId);
-    await fs.writeFile(FILES_PATH, JSON.stringify(updated, null, 2));
   }
 
   async removeAllByUserId(userId: string): Promise<void> {

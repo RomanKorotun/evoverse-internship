@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
+
 import "./UserRow.css";
 import ActionButton from "../ActionButton/ActionButton";
-import { usersStore } from "../../store/usersStore";
+import { authStore } from "../../store/authStore";
 
 const UserRow = ({ user }) => {
-  const removeUser = usersStore((state) => state.removeUser);
+  const removeUser = authStore((state) => state.removeUser);
   const navigate = useNavigate();
 
   const handleDelete = async () => {

@@ -9,11 +9,16 @@ import {
 } from '../../../../common/constants/db.constants';
 import { UserEntity } from '../../domain/entities/user.entity';
 import { readJsonFile } from '../../../../common/helpers/index';
-import { SignupDto } from '../../presentation/dto/signup.dto';
+import {
+  CreateUserInput,
+  IUsersRepository,
+  UpdateQuotaInput,
+  UpdateStatus,
+} from '../../domain/repositories/user.repository';
 
 @Injectable()
-export class UsersRepository implements OnModuleInit {
-  private readonly logger = new Logger(UsersRepository.name);
+export class UsersJsonRepository implements IUsersRepository, OnModuleInit {
+  private readonly logger = new Logger(UsersJsonRepository.name);
 
   async onModuleInit() {
     await fs.mkdir(USERS_DIR, { recursive: true });
@@ -23,53 +28,76 @@ export class UsersRepository implements OnModuleInit {
     return readJsonFile<UserEntity>(USERS_PATH, USERS_FILENAME, this.logger);
   }
 
-  async update(user: UserEntity): Promise<UserEntity | null> {
+  // створення користувача
+  async createUser(data: CreateUserInput): Promise<UserEntity> {
     const users = await this.load();
-    const index = users.findIndex((u) => u.id === user.id);
-
-    if (index === -1) {
-      return null;
-    }
-
-    users[index] = user;
+    const entity: UserEntity = {
+      id: randomUUID(),
+      ...data,
+      createdAt: new Date().toISOString(),
+    };
+    users.push(entity);
     await fs.writeFile(USERS_PATH, JSON.stringify(users, null, 2));
-
-    return user;
+    return entity;
   }
 
+  // пошук користувача по email
   async findByEmail(email: string): Promise<UserEntity | null> {
     const users = await this.load();
     const user = users.find((u) => u.email === email);
     return user ?? null;
   }
 
+  // отримання списку всіх користувачів
   async findAll(): Promise<UserEntity[]> {
     return this.load();
   }
 
+  async findAllUsersOnly(): Promise<UserEntity[]> {
+    const users = await this.load();
+    return users.filter((u) => u.role === 'USER');
+  }
+
+  // пошук користувача по id
   async findById(id: string): Promise<UserEntity | null> {
     const users = await this.load();
     const user = users.find((user) => user.id === id);
     return user ?? null;
   }
 
-  async create(dto: SignupDto): Promise<UserEntity> {
+  // оновлює статус користувача
+  async updateStatus({
+    userId,
+    status,
+  }: UpdateStatus): Promise<UserEntity | null> {
     const users = await this.load();
-    const entity: UserEntity = {
-      id: randomUUID(),
-      ...dto,
-      createdAt: new Date().toISOString(),
-    };
-    users.push(entity);
+    const index = users.findIndex((u) => u.id === userId);
+    if (index === -1) {
+      return null;
+    }
+    users[index].status = status;
     await fs.writeFile(USERS_PATH, JSON.stringify(users, null, 2));
-    this.logger.log(`[USERS_REPOSITORY] USER_CREATED id=${entity.id}`);
-    return entity;
+    return users[index];
+  }
+  // оновлює квоту користувача
+  async updateQuota({
+    userId,
+    quota,
+  }: UpdateQuotaInput): Promise<UserEntity | null> {
+    const users = await this.load();
+    const index = users.findIndex((u) => u.id === userId);
+    if (index === -1) {
+      return null;
+    }
+    users[index].quota = quota;
+    await fs.writeFile(USERS_PATH, JSON.stringify(users, null, 2));
+    return users[index];
   }
 
-  async removeById(id: string): Promise<void> {
-    const users = await this.load();
-    const filtered = users.filter((user) => user.id !== id);
-    await fs.writeFile(USERS_PATH, JSON.stringify(filtered, null, 2));
-    this.logger.log(`[USERS_REPOSITORY] USER_DELETED id=${id}`);
-  }
+  // async removeById(id: string): Promise<void> {
+  //   const users = await this.load();
+  //   const filtered = users.filter((user) => user.id !== id);
+  //   await fs.writeFile(USERS_PATH, JSON.stringify(filtered, null, 2));
+  //   this.logger.log(`[USERS_REPOSITORY] USER_DELETED id=${id}`);
+  // }
 }

@@ -10,83 +10,83 @@ import {
   StreamableFile,
   UseGuards,
 } from '@nestjs/common';
-
 import type { Response } from 'express';
-import { pipeline } from 'stream/promises';
 
-import { CreateFileUseCase } from '../application/create-file-usecase';
-import { FindAllFilesUseCase } from '../application/find-all-files-usecase';
+import { CreateFileUseCase } from '../application/create-file/create-file-usecase';
+import { FindAllFilesUseCase } from '../application/find-all-files/find-all-files-usecase';
+import { RemoveByIdUseCase } from '../application/remove-by-id/remove-by-id-usecase';
+import { GetStorageInfoUseCase } from '../application/get-storage-info/get-storage-info-usecase';
+import { ViewFileUseCase } from '../application/view-file/view-file-usecase';
 import type { AuthRequest } from '../../../common/types/auth-request';
-import { RemoveByIdUseCase } from '../application/remove-by-id-usecase';
-import { DownloadFileUseCase } from '../application/dowload-file-usecase';
-import { GetStorageInfoUseCase } from '../application/get-storage-info-usecase';
-import { AuthGuard } from '../../auth/auth.guard';
-import { ViewFileUseCase } from '../application/view-file-usecase';
+import { JwtAuthGuard } from '../../../common/security/guards/jwt-auth.guard';
+import { DownloadFileUseCase } from '../application/dowload-file/dowload-file-usecase';
 
-// @UseGuards(AuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('files')
 export class FileController {
   constructor(
     private readonly createFileUseCase: CreateFileUseCase,
     private readonly findAllFilesUseCase: FindAllFilesUseCase,
     private readonly removeByIdUseCase: RemoveByIdUseCase,
-    private readonly downloadFileUseCase: DownloadFileUseCase,
     private readonly getStorageInfoUseCase: GetStorageInfoUseCase,
+    private readonly downloadFileUseCase: DownloadFileUseCase,
     private readonly viewFileUseCase: ViewFileUseCase,
   ) {}
 
   // завантажити файл для поточного користувача
-  @UseGuards(AuthGuard)
   @Post()
   async create(@Req() req: AuthRequest) {
-    return await this.createFileUseCase.execute(req.user, req);
+    return await this.createFileUseCase.execute({ id: req.user.id, req });
   }
 
   // отримати список файлів поточного користувача
-  @UseGuards(AuthGuard)
   @Get()
   findAll(@Req() req: AuthRequest) {
     return this.findAllFilesUseCase.execute(req.user.id);
   }
 
-  // видалити файл поточного користувача
-  @UseGuards(AuthGuard)
+  // // видалити файл поточного користувача
   @Delete(':id')
   async removeById(@Param('id') id: string, @Req() req: AuthRequest) {
     return await this.removeByIdUseCase.execute(id, req.user.id);
   }
 
   // перегляд конкретного файла
-  @Get(':id/:userId/view')
+  @Get(':id/view')
   async view(
     @Param('id') fileId: string,
-    @Param('userId') userId: string,
-    @Headers('range') range: string,
-    @Res() res: Response,
+    @Req() req: AuthRequest,
+    @Headers('range') range?: string,
   ) {
-    const result = await this.viewFileUseCase.execute(fileId, userId, range);
-
-    res.set(result.headers);
-    res.status(result.statusCode);
-
-    await pipeline(result.stream, res);
-  }
-
-  // скачати файл поточного користувача
-  @UseGuards(AuthGuard)
-  @Get(':id/download')
-  async downloadFile(@Param('id') id: string, @Req() req: AuthRequest) {
-    const file = await this.downloadFileUseCase.execute(id, req.user.id);
-    return new StreamableFile(file.stream, {
-      type: file.mimeType,
-      disposition: `attachment; filename*=UTF-8''${encodeURIComponent(file.filename)}`,
+    const result = await this.viewFileUseCase.execute(
+      fileId,
+      req.user.id,
+      range,
+    );
+    return new StreamableFile(result.stream, {
+      type: result.headers['Content-Type'],
+      disposition: result.headers['Content-Disposition'],
     });
   }
 
-  // отримати інформацію про файлове сховище користувача
-  @UseGuards(AuthGuard)
+  // скачати файл поточного користувача
+  @Get(':id/download')
+  async downloadFile(
+    @Param('id') id: string,
+    @Req() req: AuthRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const file = await this.downloadFileUseCase.execute(id, req.user.id);
+    res.set({
+      'Content-Type': file.mimeType,
+      'Content-Disposition': `attachment; filename*=UTF-8''${encodeURIComponent(file.filename)}`,
+    });
+    return new StreamableFile(file.stream);
+  }
+
+  // // отримати інформацію про файлове сховище користувача
   @Get('storage/summary')
   async getStorageInfo(@Req() req: AuthRequest) {
-    return await this.getStorageInfoUseCase.execute(req.user);
+    return await this.getStorageInfoUseCase.execute(req.user.id);
   }
 }

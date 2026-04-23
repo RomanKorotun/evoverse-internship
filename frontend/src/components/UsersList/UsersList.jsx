@@ -1,11 +1,12 @@
 import "./UsersList.css";
-import { usersStore } from "../../store/usersStore";
+
 import UserRow from "../UserRow/UserRow";
+import { authStore } from "../../store/authStore";
 
 const columns = ["Електронна пошта", "Ліміт сховища", "Дата створення", "Дії"];
 
 const UsersList = () => {
-  const users = usersStore((state) => state.users);
+  const users = authStore((state) => state.users);
 
   return (
     <section className="users-list">

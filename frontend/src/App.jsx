@@ -1,19 +1,77 @@
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Layout from "./Layout";
+
+import LandingPage from "./pages/LandingPage/LandingPage";
 import SignupPage from "./pages/SignupPage/SignupPage";
+import SigninPage from "./pages/SigninPage/SigninPage";
+
+import DashboardPage from "./pages/DashboardPage/DashboardPage";
+import AdminPage from "./pages/AdminPage/AdminPage";
+import SettingsPage from "./pages/SettingsPage/SettingsPage";
+
 import NotFoundPage from "./pages/NotFoundPage";
-import UsersPage from "./pages/UsersPage/UsersPage";
-import UserDetailsPage from "./pages/UserDetailsPage/UserDetailsPage";
+import BlockedPage from "./pages/BlockedPage/BlockedPage";
+
+import { authStore } from "./store/authStore";
+
+import UserRoute from "./routes/UserRoute";
+import AdminRoute from "./routes/AdminRoute";
+import GuestRoute from "./routes/GuestRoute";
 
 const App = () => {
+  const fetchMe = authStore((s) => s.fetchMe);
+  const loading = authStore((s) => s.loading);
+  const user = authStore((s) => s.user);
+
+  useEffect(() => {
+    fetchMe();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<SignupPage />} />
-        <Route path="users" element={<UsersPage />} />
-        <Route path="users/:id" element={<UserDetailsPage />} />
+        {/* LANDING */}
+        <Route
+          index
+          element={
+            !user ? (
+              <LandingPage />
+            ) : user.role === "ADMIN" ? (
+              <Navigate to="/admin" replace />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
+
+        {/* GUEST */}
+        <Route element={<GuestRoute />}>
+          <Route path="signin" element={<SigninPage />} />
+          <Route path="signup" element={<SignupPage />} />
+        </Route>
+
+        {/* USER */}
+        <Route element={<UserRoute />}>
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="dashboard/settings" element={<SettingsPage />} />
+        </Route>
+
+        {/* ADMIN */}
+        <Route element={<AdminRoute />}>
+          <Route path="admin" element={<AdminPage />} />
+          <Route path="admin/settings" element={<SettingsPage />} />
+        </Route>
+
+        {/* BLOCKED */}
+        <Route path="blocked" element={<BlockedPage />} />
       </Route>
+
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

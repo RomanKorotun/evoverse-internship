@@ -1,8 +1,10 @@
 import axios from "axios";
-import { BACKEND_URL } from "../config.js";
+
+const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 const apiClient = axios.create({
   baseURL: BACKEND_URL,
+  withCredentials: true,
 });
 
 export default apiClient;

@@ -1,35 +1,24 @@
 import apiClient from "./apiClient";
 
-export const uploadFile = async (formData, headers) => {
-  const { email, password } = headers;
-  const { data } = await apiClient.post("/files", formData, {
-    headers: {
-      "x-email": email,
-      "x-password": password,
-    },
-  });
+// завантажити файл
+export const uploadFile = async (formData) => {
+  const { data } = await apiClient.post("/files", formData);
   return data;
 };
 
-export const getFiles = async (headers) => {
-  const { email, password } = headers;
-  const { data } = await apiClient.get("/files", {
-    headers: { "x-email": email, "x-password": password },
-  });
+// отримання файлів поточного користувача
+export const getFiles = async () => {
+  const { data } = await apiClient.get("/files");
   return data;
 };
 
-export const getStats = async (headers) => {
-  const { email, password } = headers;
-  const { data } = await apiClient.get("/files/storage/summary", {
-    headers: { "x-email": email, "x-password": password },
-  });
+// отримання статистики файлового сховища
+export const getStats = async () => {
+  const { data } = await apiClient.get("/files/storage/summary");
   return data;
 };
 
-export const deleteFile = async (id, headers) => {
-  const { email, password } = headers;
-  await apiClient.delete(`/files/${id}`, {
-    headers: { "x-email": email, "x-password": password },
-  });
+// видалення файла
+export const deleteFile = async (id) => {
+  await apiClient.delete(`/files/${id}`);
 };

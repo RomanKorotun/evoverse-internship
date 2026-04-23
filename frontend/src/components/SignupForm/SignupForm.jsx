@@ -1,16 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./SignupForm.css";
 import { convertMbToBytes } from "../../helpers/bytesConverter";
-import { usersStore } from "../../store/usersStore";
+import AuthTabs from "../AuthTabs/AuthTabs";
+import { authStore } from "../../store/authStore";
 
 const SignupForm = () => {
   const [email, setEmail] = useState("");
   const [quota, setQuota] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
-  const { registerUser } = usersStore();
+  const navigate = useNavigate();
+
+  const { registerUser } = authStore();
 
   const quotaInBytes = convertMbToBytes(quota);
 
@@ -18,22 +22,18 @@ const SignupForm = () => {
     e.preventDefault();
     try {
       await registerUser({ email, quota: quotaInBytes, password });
-      setEmail("");
-      setQuota("");
-      setPassword("");
-      setError("");
-      setSuccess("Користувач успішно зареєстрований ✅");
+      navigate("/signin");
     } catch (err) {
       const message =
         err?.response?.data?.message || "Помилка при реєстрації ❌";
       setError(message);
-      setSuccess("");
     }
   };
 
   return (
     <div className="signup-form-wrapper">
       <form className="signup-form" onSubmit={handleSubmit}>
+        <AuthTabs />
         <label className="signup-label">Email</label>
         <input
           type="email"
@@ -43,7 +43,6 @@ const SignupForm = () => {
           onChange={(e) => {
             setEmail(e.target.value);
             setError("");
-            setSuccess("");
           }}
           className="signup-input"
           required
@@ -58,7 +57,6 @@ const SignupForm = () => {
           onChange={(e) => {
             setQuota(e.target.value);
             setError("");
-            setSuccess("");
           }}
           className="signup-input"
           min={1}
@@ -74,17 +72,15 @@ const SignupForm = () => {
           onChange={(e) => {
             setPassword(e.target.value);
             setError("");
-            setSuccess("");
           }}
           className="signup-input"
           required
         />
 
         <button type="submit" className="signup-button">
-          Зареєструватися
+          Логін
         </button>
         {error && <div className="signup-error">{error}</div>}
-        {success && <div className="signup-success">{success}</div>}
       </form>
     </div>
   );

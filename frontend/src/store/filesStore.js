@@ -6,12 +6,12 @@ export const filesStore = create((set) => ({
   files: [],
   stats: null,
 
-  handleFileUpload: async (formData, headers) => {
+  // завантажити файла
+  handleFileUpload: async (formData) => {
     try {
-      const data = await uploadFile(formData, headers);
-
-      const files = await getFiles(headers);
-      const stats = await getStats(headers);
+      const data = await uploadFile(formData);
+      const files = await getFiles();
+      const stats = await getStats();
 
       set({ files, stats });
     } catch (error) {
@@ -19,43 +19,32 @@ export const filesStore = create((set) => ({
     }
   },
 
-  changeQuota: async (quota) => {
+  // отримання статистики файлового сховища
+  fetchStats: async () => {
     try {
-      await updateQuota(quota);
-      set((state) => ({
-        stats: {
-          ...state.stats,
-          quotaBytes: quota,
-        },
-      }));
-    } catch (err) {
-      throw err;
-    }
-  },
-
-  fetchStats: async (headers) => {
-    try {
-      const statsData = await getStats(headers);
+      const statsData = await getStats();
       set({ stats: statsData });
     } catch (err) {
       console.error("Помилка при отриманні статистики:", err);
     }
   },
 
-  fetchFiles: async (headers) => {
+  // отримання файлів поточного користувача
+  fetchFiles: async () => {
     try {
-      const filesData = await getFiles(headers);
+      const filesData = await getFiles();
       set({ files: filesData });
     } catch (err) {
       console.error("Помилка при отриманні файлів:", err);
     }
   },
 
-  removeFile: async (id, headers) => {
+  // видалення файла
+  removeFile: async (id) => {
     try {
-      await deleteFile(id, headers);
-      const filesData = await getFiles(headers);
-      const statsData = await getStats(headers);
+      await deleteFile(id);
+      const filesData = await getFiles();
+      const statsData = await getStats();
       set({ files: filesData, stats: statsData });
     } catch (err) {
       console.error("Помилка при видаленні файлу:", err);

@@ -1,0 +1,26 @@
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.auth-btn {
+  width: 300px;
+  padding: 12px 20px;
+  background: transparent;
+  border: 2px solid black;
+
+  color: black;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: Arial, sans-serif;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.auth-btn:hover {
+  background: black;
+  color: white;
+}

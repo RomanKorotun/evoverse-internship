@@ -6,10 +6,10 @@ import { pipeline } from 'stream/promises';
 import Busboy from 'busboy';
 import type { Request } from 'express';
 import mime from 'mime-types';
-import { randomUUID } from 'crypto';
 
 import { LimitStream } from '../streams/limit.stream';
 import { STORAGE_DIR } from '../../../../common/constants/store.constants';
+import { normalizeFilename } from '../../helpers/index';
 
 @Injectable()
 export class FileStorage implements OnModuleInit {
@@ -21,58 +21,49 @@ export class FileStorage implements OnModuleInit {
 
   async upload(req: Request, limitBytes: number) {
     const busboy = Busboy({ headers: req.headers });
-
     const startTime = Date.now();
-    const uploadId = randomUUID();
 
     return new Promise<{ filename: string; size: number }>(
       (resolve, reject) => {
-        let finished = false;
         let hasFile = false;
 
-        busboy.on('file', async (_field, file, info) => {
-          if (finished) return;
-
+        busboy.on('file', async (_f, file, info) => {
           hasFile = true;
 
-          const safeName = info.filename.replace(/[^a-zA-Z0-9.\-_]/g, '_');
-          const storedName = `${Date.now()}-${safeName}`;
+          const name = `${Date.now()}-${normalizeFilename(info.filename)}`;
+          const filePath = path.join(STORAGE_DIR, name);
 
-          this.logger.log(`[UPLOAD START] id=${uploadId} file=${storedName}`);
+          this.logger.log(`[UPLOAD START] file=${name}`);
 
-          const limitStream = new LimitStream(
-            limitBytes,
+          const limit = new LimitStream(limitBytes, this.logger, name);
+          const out = fs.createWriteStream(filePath);
 
-            this.logger,
-            storedName,
-          );
+          pipeline(file, limit, out)
+            .then(() => {
+              this.logger.log(
+                `[UPLOAD DONE] file=${name} size=${limit.size} time=${Date.now() - startTime}ms`,
+              );
 
-          try {
-            await pipeline(
-              file,
-              limitStream,
-              fs.createWriteStream(path.join(STORAGE_DIR, storedName)),
-            );
+              resolve({
+                filename: name,
+                size: limit.size,
+              });
+            })
+            .catch(async (err: Error) => {
+              this.logger.error(
+                `[UPLOAD ERROR] file=${name} error=${err.message}`,
+              );
 
-            finished = true;
+              try {
+                await fsPromises.unlink(filePath);
+              } catch (e) {
+                this.logger.error(
+                  `[CLEANUP ERROR] ${e instanceof Error ? e.message : String(e)}`,
+                );
+              }
 
-            const totalTime = Date.now() - startTime;
-
-            this.logger.log(
-              `[UPLOAD DONE] id=${uploadId} file=${storedName} size=${limitStream.size} time=${totalTime}ms`,
-            );
-
-            resolve({
-              filename: storedName,
-              size: limitStream.size,
+              reject(err);
             });
-          } catch (err) {
-            this.logger.error(
-              `[UPLOAD ERROR] id=${uploadId} file=${storedName} error=${(err as Error).message}`,
-            );
-
-            reject(err);
-          }
         });
 
         busboy.on('error', reject);
@@ -121,7 +112,7 @@ export class FileStorage implements OnModuleInit {
       headers: {
         'Content-Type': mimeType,
         'Content-Length': chunkSize,
-        'Content-Disposition': `${mode}; filename="${filename}"`,
+        'Content-Disposition': `${mode}; filename*=UTF-8''${encodeURIComponent(filename)}`,
 
         ...(isRangeRequest && {
           'Content-Range': `bytes ${start}-${end}/${fileSize}`,
