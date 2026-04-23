@@ -64,7 +64,43 @@ git clone url-репозиторія
  docker exec -it node_app_hw_5 sh
 ```
 
-3.2. API відповіді
+3.2. API маршрути
+
+### USERS
+
+POST /users/signup — реєстрація користувача
+
+---
+
+### ADMIN
+
+GET /admin/users — отримання списку всіх користувачів (тільки ADMIN)  
+PATCH /admin/users/:id/status — блокування / розблокування користувача  
+PATCH /admin/users/:id/quota — зміна квоти користувача
+
+---
+
+### AUTH
+
+POST /auth/signin — авторизація користувача  
+POST /auth/signout — вихід з поточного пристрою  
+GET /auth/me — отримання поточного користувача  
+GET /auth/sessions — отримання всіх активних сесій користувача  
+DELETE /auth/sessions/:id/revoke — видалення конкретної сесії  
+DELETE /auth/sessions/revoke-all — видалення всіх сесій користувача (logout з усіх пристроїв)
+
+---
+
+### FILES
+
+POST /files — завантажити файл для поточного користувача  
+GET /files — отримати список файлів поточного користувача  
+DELETE /files/:id — видалити файл поточного користувача  
+GET /files/:id/view — перегляд конкретного файла користувача  
+GET /files/:id/download — завантажити файл поточного користувача  
+GET /files/storage/summary — отримати інформацію про файлове сховище користувача
+
+3.3. API відповіді
 
 Усі значення розміру (sizeBytes, totalSizeBytes, quotaBytes) повертаються у байтах.
 
