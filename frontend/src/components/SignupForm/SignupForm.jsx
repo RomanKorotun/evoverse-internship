@@ -78,7 +78,7 @@ const SignupForm = () => {
         />
 
         <button type="submit" className="signup-button">
-          Логін
+          Реєстрація
         </button>
         {error && <div className="signup-error">{error}</div>}
       </form>
