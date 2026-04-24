@@ -46,7 +46,6 @@ export class SigninUseCase {
       throw new ForbiddenException({
         message: 'Користувач заблокований',
         code: 'USER_BLOCKED',
-        status: UserStatus.BLOCKED,
       });
     }
 

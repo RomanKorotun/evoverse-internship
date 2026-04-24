@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
@@ -6,6 +6,8 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { TokenHashService } from '../../../../common/security/services/token-hash.service';
 import type { ISessionsRepository } from '../../domain/repositories/session.repository';
+import { FindUserByIdUseCase } from '../../../user/application/find-user-by-id/find-user-by-id.usecase';
+import { UserStatus } from '../../../user/domain/enums/user-status.enum';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -13,6 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly configService: ConfigService,
     @Inject('ISessionsRepository')
     private readonly sessionsRepository: ISessionsRepository,
+    private readonly findUserByIdUseCase: FindUserByIdUseCase,
     private readonly tokenHashService: TokenHashService,
   ) {
     super({
@@ -40,9 +43,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Session not found');
     }
 
+    const user = await this.findUserByIdUseCase.execute(payload.id);
+
+    if (user.status === UserStatus.BLOCKED) {
+      throw new ForbiddenException({
+        message: 'Користувач заблокований',
+        code: 'USER_BLOCKED',
+      });
+    }
+
     return {
-      id: payload.id,
-      role: payload.role,
+      id: user.id,
+      role: user.role,
       sessionId: session.id,
     };
   }
